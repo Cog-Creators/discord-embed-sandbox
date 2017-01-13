@@ -1,3 +1,5 @@
+![embed](http://i.imgur.com/GemcoBW.png)
+
 # discord-embed-sandbox
 
 > Web-based sandbox for Discord Embeds with code generation
