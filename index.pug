@@ -1,0 +1,58 @@
+link(href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet")
+a.patreon-link(href="https://patreon.com/orels1" target="_blank")
+  .badge-container
+    .badge-text like what you see?
+    .badge-icon
+    .badge-text.badge-text-bottom support me
+
+.container
+  .col-md-10.offset-md-1
+    .card-deck
+      .card
+        .card-header Embed Editor
+        .card-block
+          form#form
+            .form-group
+              label Basic settings
+              input#title.form-control(type="text", placeholder="title")
+            .form-group
+              input#description.form-control(type="text", placeholder="description")
+            .form-group
+              input#url.form-control(type="text", placeholder="url")
+            .form-group
+              label Color
+              input#color.form-control(type="color")
+            .form-group
+              label Thumbnail settings
+              input#icon.form-control(type="text", placeholder="icon")
+            .form-group
+              label Author settings
+              input#author_name.form-control(type="text", placeholder="author name")
+            .form-group
+              input#author_url.form-control(type="text", placeholder="author link")
+            .form-group
+              input#author_icon.form-control(type="text", placeholder="author icon")
+            .form-group
+              label Fields
+            .input-fields
+            .form-group
+              label Footer settings
+              input#footer.form-control(type="text", placeholder="footer text")
+  br/
+  .col-md-8.offset-md-2          
+    .card
+      .card-header Embed Preview
+      .card-block.preview
+        .wrapper
+          .side-colored
+          .card.embed
+            .card-block
+              .embed-inner
+  br/
+  .col-md-10.offset-md-1
+    .card
+      .card-header Python code
+      .card-block
+        pre
+          code.python.source
+                
