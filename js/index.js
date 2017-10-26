@@ -46,7 +46,7 @@ $(document).ready(function () {
       if (switches.useVars) {
         source += 'title=' + embed.title + ', url=' + embed.url;
       } else {
-        source += 'title="' + embed.title + '", url=\'' + embed.url + '\'';
+        source += 'title="' + embed.title + '", url="' + embed.url + '"';
       }
     } else if (embed.title.length === 0) {
       source += "";
@@ -98,12 +98,33 @@ $(document).ready(function () {
       $('.embed-title').before('<div class="embed-author"><a class="embed-author-name" href="' + embed.author.url + '">' + embed.author.name + '</a></div>');
 
       // update source
-      source += 'name="' + embed.author.name + '"' + (embed.author.url && ', url=\'' + embed.author.url + '\'');
+      if (switches.useVars) {
+        source += 'name=' + embed.author.name;
+      } else {
+        source += 'name=' + embed.author.name + '"';
+      }
+
+      if(embed.author.url) {
+        source += ', ';
+
+        if (switches.useVars) {
+          source += 'url=' + embed.author.url;
+        } else {
+          source += 'url="' + embed.author.url + '"';
+        }
+      }
+
       if (embed.author.icon) {
         $('.embed-author-name').before('<img class="embed-author-icon" src="' + embed.author.icon + '" />');
 
+        source += ',';
+
         // update source
-        source += ', icon_url=\'' + embed.author.icon + '\'';
+        if (switches.useVars) {
+          source += 'icon_url=' + embed.author.icon;
+        } else {
+          source += ', icon_url="' + embed.author.icon + '"';
+        }
       }
 
       // finish author
@@ -118,7 +139,11 @@ $(document).ready(function () {
       $('.embed-thumb').height($('.embed-thumb')[0].naturalHeight);
 
       // update source
-      source += 'url=\'' + embed.thumb_url + '\'';
+      if (switches.useVars) {
+        source += 'url=' + embed.thumb_url;
+      } else {
+        source += 'url="' + embed.thumb_url + '"';
+      }
 
       // finish thumbnail
       source += ')\n';
@@ -145,14 +170,22 @@ $(document).ready(function () {
       $('.embed-inner .fields').append('\n        <div class="field ' + (field.inline && 'inline') + '">\n          <div class="field-name">' + field.name + '</div>\n          <div class="field-value">' + field.value + '</div>\n        </div>\n      ');
 
       // add field
-      source += 'embed.add_field(name="' + field.name + '", value="' + field.value + '", inline=' + (field.inline && 'True' || 'False') + ')\n';
+      if (switches.useVars) {
+        source += 'embed.add_field(name=' + field.name + ', value=' + field.value + ', inline=' + (field.inline && 'True' || 'False') + ')\n';
+      } else {
+        source += 'embed.add_field(name=' + field.name + ', value=' + field.value + ', inline=' + (field.inline && 'True' || 'False') + ')\n';
+      }
     }
 
     if (embed.footer) {
       $('.card.embed').append('<div class="embed-footer"><span>' + embed.footer + '</span></div>');
 
       // add footer
-      source += 'embed.set_footer(text="' + embed.footer + '")\n';
+      if (switches.useVars) {
+        source += 'embed.set_footer(text=' + embed.footer + ')\n';
+      } else {
+        source += 'embed.set_footer(text="' + embed.footer + '")\n';
+      }
     }
 
     // add send function
