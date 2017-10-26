@@ -4,7 +4,8 @@ $(document).ready(function () {
   var switches = {
     title: false,
     url: false,
-    icon: false
+    icon: false,
+    useVars: false
   };
 
   var fields = 1;
@@ -12,7 +13,7 @@ $(document).ready(function () {
   var source = '';
 
   var embed = {
-    title: 'Embed title (required)',
+    title: '',
     author: {
       name: '',
       url: '',
@@ -42,26 +43,49 @@ $(document).ready(function () {
       $('.embed-inner').append('<div class="embed-title"><a href="' + embed.url + '">' + embed.title + '</a></div>');
 
       // update source
-      source += 'title="' + embed.title + '", url=\'' + embed.url + '\'';
+      if (switches.useVars) {
+        source += 'title=' + embed.title + ', url=' + embed.url;
+      } else {
+        source += 'title="' + embed.title + '", url="' + embed.url + '"';
+      }
+    } else if (embed.title.length === 0) {
+      source += "";
     } else {
       $('.embed-inner').append('<div class="embed-title">' + embed.title + '</div>');
 
       // update source
-      source += 'title="' + embed.title + '"';
+      if (switches.useVars) {
+        source += 'title=' + embed.title;
+      } else {
+        source += 'title="' + embed.title + '"';
+      }
+
     }
 
     if (embed.description) {
       $('.embed-inner').append('<div class="embed-description">' + embed.description + '</div>');
 
+      if (embed.title.length > 0 || embed.url.length > 0) {
+        source += ', '
+      }
+
       // update source
-      source += ', description="' + embed.description + '"';
+      if (switches.useVars) {
+        source += 'decsription=' + embed.description;
+      } else {
+        source += 'description="' + embed.description + '"';
+      }
     }
 
     if (embed.color) {
       $('.side-colored').css('background-color', embed.color);
 
+      if (embed.title.length > 0 || embed.url.length > 0) {
+        source += ', '
+      }
+
       // update source
-      source += ', color=0x' + embed.color.substr(1);
+      source += 'color=0x' + embed.color.substr(1);
     }
 
     // finished the basic setup
@@ -74,12 +98,33 @@ $(document).ready(function () {
       $('.embed-title').before('<div class="embed-author"><a class="embed-author-name" href="' + embed.author.url + '">' + embed.author.name + '</a></div>');
 
       // update source
-      source += 'name="' + embed.author.name + '"' + (embed.author.url && ', url=\'' + embed.author.url + '\'');
+      if (switches.useVars) {
+        source += 'name=' + embed.author.name;
+      } else {
+        source += 'name=' + embed.author.name + '"';
+      }
+
+      if(embed.author.url) {
+        source += ', ';
+
+        if (switches.useVars) {
+          source += 'url=' + embed.author.url;
+        } else {
+          source += 'url="' + embed.author.url + '"';
+        }
+      }
+
       if (embed.author.icon) {
         $('.embed-author-name').before('<img class="embed-author-icon" src="' + embed.author.icon + '" />');
 
+        source += ',';
+
         // update source
-        source += ', icon_url=\'' + embed.author.icon + '\'';
+        if (switches.useVars) {
+          source += 'icon_url=' + embed.author.icon;
+        } else {
+          source += ', icon_url="' + embed.author.icon + '"';
+        }
       }
 
       // finish author
@@ -94,7 +139,11 @@ $(document).ready(function () {
       $('.embed-thumb').height($('.embed-thumb')[0].naturalHeight);
 
       // update source
-      source += 'url=\'' + embed.thumb_url + '\'';
+      if (switches.useVars) {
+        source += 'url=' + embed.thumb_url;
+      } else {
+        source += 'url="' + embed.thumb_url + '"';
+      }
 
       // finish thumbnail
       source += ')\n';
@@ -121,14 +170,22 @@ $(document).ready(function () {
       $('.embed-inner .fields').append('\n        <div class="field ' + (field.inline && 'inline') + '">\n          <div class="field-name">' + field.name + '</div>\n          <div class="field-value">' + field.value + '</div>\n        </div>\n      ');
 
       // add field
-      source += 'embed.add_field(name="' + field.name + '", value="' + field.value + '", inline=' + (field.inline && 'True' || 'False') + ')\n';
+      if (switches.useVars) {
+        source += 'embed.add_field(name=' + field.name + ', value=' + field.value + ', inline=' + (field.inline && 'True' || 'False') + ')\n';
+      } else {
+        source += 'embed.add_field(name=' + field.name + ', value=' + field.value + ', inline=' + (field.inline && 'True' || 'False') + ')\n';
+      }
     }
 
     if (embed.footer) {
       $('.card.embed').append('<div class="embed-footer"><span>' + embed.footer + '</span></div>');
 
       // add footer
-      source += 'embed.set_footer(text="' + embed.footer + '")\n';
+      if (switches.useVars) {
+        source += 'embed.set_footer(text=' + embed.footer + ')\n';
+      } else {
+        source += 'embed.set_footer(text="' + embed.footer + '")\n';
+      }
     }
 
     // add send function
@@ -278,21 +335,15 @@ $(document).ready(function () {
     var item = $('#title');
     var title = item.val();
 
-    // preform checks
-    if (title.length === 0) {
-      addWarning(item, 'title', 'title cannot be empty');
-    } else {
-      addSuccess(item, 'title');
-      // update
-      updateTitle(title);
-    }
+    // update
+    updateTitle(title);
   });
 
   $('#url').keyup(function () {
     var item = $('#url');
     var url = item.val();
 
-    if (url.substr(0, 4) !== 'http' && url.length !== 0) {
+    if (url.substr(0, 4) !== 'http' && url.length !== 0 && !switches.useVars) {
       addWarning(item, 'url', 'not a valid url');
     } else {
       addSuccess(item, 'url');
@@ -305,7 +356,7 @@ $(document).ready(function () {
     var item = $('#icon');
     var icon = item.val();
 
-    if (icon.substr(0, 4) !== 'http' && icon.length !== 0) {
+    if (icon.substr(0, 4) !== 'http' && icon.length !== 0 && !switches.useVars) {
       addWarning(item, 'icon', 'not a valid url');
     } else {
       addSuccess(item, 'icon');
@@ -339,7 +390,7 @@ $(document).ready(function () {
     var item = $('#author_url');
     var author_url = item.val();
 
-    if (author_url.substr(0, 4) !== 'http' && author_url.length !== 0) {
+    if (author_url.substr(0, 4) !== 'http' && author_url.length !== 0 && !switches.useVars) {
       addWarning(item, 'author_url', 'not a valid url');
     } else {
       addSuccess(item, 'author_url');
@@ -352,7 +403,7 @@ $(document).ready(function () {
     var item = $('#author_icon');
     var author_icon = item.val();
 
-    if (author_icon.substr(0, 4) !== 'http' && author_icon.length !== 0) {
+    if (author_icon.substr(0, 4) !== 'http' && author_icon.length !== 0 && !switches.useVars) {
       addWarning(item, 'author_icon', 'not a valid url');
     } else {
       addSuccess(item, 'author_icon');
@@ -368,5 +419,10 @@ $(document).ready(function () {
     addSuccess(item, 'footer');
     // update
     updateFooter(footer);
+  });
+
+  $('#useVars').click(function () {
+    switches.useVars = !switches.useVars;
+    updateEmbed(embed);
   });
 });
