@@ -71,7 +71,7 @@ $(document).ready(function () {
 
       // update source
       if (switches.useVars) {
-        source += 'decsription=' + embed.description;
+        source += 'description=' + embed.description;
       } else {
         source += 'description="' + embed.description + '"';
       }
