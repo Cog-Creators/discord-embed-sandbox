@@ -101,7 +101,7 @@ $(document).ready(function () {
       if (switches.useVars) {
         source += 'name=' + embed.author.name;
       } else {
-        source += 'name=' + embed.author.name + '"';
+        source += 'name="' + embed.author.name + '"';
       }
 
       if(embed.author.url) {
