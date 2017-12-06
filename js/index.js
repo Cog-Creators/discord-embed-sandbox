@@ -71,7 +71,7 @@ $(document).ready(function () {
 
       // update source
       if (switches.useVars) {
-        source += 'decsription=' + embed.description;
+        source += 'description=' + embed.description;
       } else {
         source += 'description="' + embed.description + '"';
       }
@@ -101,7 +101,7 @@ $(document).ready(function () {
       if (switches.useVars) {
         source += 'name=' + embed.author.name;
       } else {
-        source += 'name=' + embed.author.name + '"';
+        source += 'name="' + embed.author.name + '"';
       }
 
       if(embed.author.url) {
