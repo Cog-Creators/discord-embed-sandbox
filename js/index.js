@@ -1,6 +1,8 @@
 'use strict';
 
 $(document).ready(function () {
+  var converter = new showdown.Converter();
+
   var switches = {
     title: false,
     url: false,
@@ -63,7 +65,7 @@ $(document).ready(function () {
     }
 
     if (embed.description) {
-      $('.embed-inner').append('<div class="embed-description">' + embed.description + '</div>');
+      $('.embed-inner').append('<div class="embed-description">' + converter.makeHtml(embed.description) + '</div>');
 
       if (embed.title.length > 0 || embed.url.length > 0) {
         source += ', '
@@ -167,7 +169,7 @@ $(document).ready(function () {
 
       var field = _ref;
 
-      $('.embed-inner .fields').append('\n        <div class="field ' + (field.inline && 'inline') + '">\n          <div class="field-name">' + field.name + '</div>\n          <div class="field-value">' + field.value + '</div>\n        </div>\n      ');
+      $('.embed-inner .fields').append('\n        <div class="field ' + (field.inline && 'inline') + '">\n          <div class="field-name">' + field.name + '</div>\n          <div class="field-value">' + converter.makeHtml(field.value) + '</div>\n        </div>\n      ');
 
       // add field
       if (switches.useVars) {
