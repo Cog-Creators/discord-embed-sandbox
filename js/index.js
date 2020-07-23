@@ -53,6 +53,8 @@ $(document).ready(function () {
     } else if (embed.title.length === 0) {
       source += "";
     } else {
+      embed.title = parseLineBreaksAndSpaces(embed.title);
+    
       $('.embed-inner').append('<div class="embed-title">' + embed.title + '</div>');
 
       // update source
@@ -65,6 +67,8 @@ $(document).ready(function () {
     }
 
     if (embed.description) {
+      embed.description = parseLineBreaksAndSpaces(embed.description);
+
       $('.embed-inner').append('<div class="embed-description">' + converter.makeHtml(embed.description) + '</div>');
 
       if (embed.title.length > 0 || embed.url.length > 0) {
@@ -96,6 +100,8 @@ $(document).ready(function () {
     if (embed.author.name) {
       // add author to source
       source += 'embed.set_author(';
+
+      embed.author.name = parseLineBreaksAndSpaces(embed.author.name);
 
       $('.embed-title').before('<div class="embed-author"><a class="embed-author-name" href="' + embed.author.url + '">' + embed.author.name + '</a></div>');
 
@@ -169,6 +175,9 @@ $(document).ready(function () {
 
       var field = _ref;
 
+      field.name = parseLineBreaksAndSpaces(field.name);
+      field.value = parseLineBreaksAndSpaces(field.value);
+
       $('.embed-inner .fields').append('\n        <div class="field ' + (field.inline && 'inline') + '">\n          <div class="field-name">' + field.name + '</div>\n          <div class="field-value">' + converter.makeHtml(field.value) + '</div>\n        </div>\n      ');
 
       // add field
@@ -180,6 +189,8 @@ $(document).ready(function () {
     }
 
     if (embed.footer) {
+      embed.footer = parseLineBreaksAndSpaces(embed.footer);
+      
       $('.card.embed').append('<div class="embed-footer"><span>' + embed.footer + '</span></div>');
 
       // add footer
@@ -308,6 +319,11 @@ $(document).ready(function () {
   function updateFooter(value) {
     embed.footer = value || '';
     updateEmbed(embed);
+  }
+
+  function parseLineBreaksAndSpaces(str) {
+    if(str)
+      return str.replace('\\n', '<br>').replace('\\u200b', '&#x200b;');
   }
 
   $('#form').submit(function (e) {
