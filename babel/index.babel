@@ -44,6 +44,8 @@ $(document).ready(() => {
       // update source
       source += `title="${embed.title}", url='${embed.url}'`;
     } else {
+      embed.title = escapeS(embed.title);
+      
       $('.embed-inner').append(`<div class="embed-title">${embed.title}</div>`);
       
       // update source
@@ -51,6 +53,8 @@ $(document).ready(() => {
     }
     
     if (embed.description) {
+      embed.description = escapeS(embed.description);
+
       $('.embed-inner').append(`<div class="embed-description">${embed.description}</div>`);
       
       // update source
@@ -70,6 +74,8 @@ $(document).ready(() => {
     if (embed.author.name) {
       // add author to source
       source += `embed.set_author(`;
+
+      embed.author.name = escapeS(embed.author.name);
       
       $('.embed-title').before(`<div class="embed-author"><a class="embed-author-name" href="${embed.author.url}">${embed.author.name}</a></div>`);
       
@@ -105,6 +111,9 @@ $(document).ready(() => {
     }
     
     for (let field of embed.fields) {
+      field.name = escapeS(field.name);
+      field.value = escapeS(field.value);
+
       $('.embed-inner .fields').append(`
         <div class="field ${field.inline && 'inline'}">
           <div class="field-name">${field.name}</div>
@@ -117,6 +126,8 @@ $(document).ready(() => {
     }
 
     if (embed.footer) {
+      embed.footer = escapeS(embed.footer);
+
       $('.card.embed').append(`<div class="embed-footer"><span>${embed.footer}</span></div>`);
       
       // add footer
@@ -253,6 +264,16 @@ $(document).ready(() => {
   function updateFooter(value) {
     embed.footer = value || '';
     updateEmbed(embed);
+  }
+
+  function escapeS(str) {
+    if (str) {
+        try {
+            return str = JSON.parse('"' + str + '"');
+        } catch (SyntaxEror) {
+            return str;
+        }
+    }
   }
   
   $('#form').submit((e) => {
