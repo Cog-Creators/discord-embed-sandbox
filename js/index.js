@@ -53,9 +53,9 @@ $(document).ready(function () {
     } else if (embed.title.length === 0) {
       source += "";
     } else {
-      embed.title = parseLineBreaksAndSpaces(embed.title);
+      embed.title = escapeS(embed.title);
     
-      $('.embed-inner').append('<div class="embed-title">' + embed.title + '</div>');
+      $('.embed-inner').append('<div class="embed-title" style="white-space: pre-wrap;">' + embed.title + '2</div>');
 
       // update source
       if (switches.useVars) {
@@ -67,7 +67,7 @@ $(document).ready(function () {
     }
 
     if (embed.description) {
-      embed.description = parseLineBreaksAndSpaces(embed.description);
+      embed.description = escapeS(embed.description);
 
       $('.embed-inner').append('<div class="embed-description">' + converter.makeHtml(embed.description) + '</div>');
 
@@ -101,7 +101,7 @@ $(document).ready(function () {
       // add author to source
       source += 'embed.set_author(';
 
-      embed.author.name = parseLineBreaksAndSpaces(embed.author.name);
+      embed.author.name = escapeS(embed.author.name);
 
       $('.embed-title').before('<div class="embed-author"><a class="embed-author-name" href="' + embed.author.url + '">' + embed.author.name + '</a></div>');
 
@@ -175,8 +175,8 @@ $(document).ready(function () {
 
       var field = _ref;
 
-      field.name = parseLineBreaksAndSpaces(field.name);
-      field.value = parseLineBreaksAndSpaces(field.value);
+      field.name = escapeS(field.name);
+      field.value = escapeS(field.value);
 
       $('.embed-inner .fields').append('\n        <div class="field ' + (field.inline && 'inline') + '">\n          <div class="field-name">' + field.name + '</div>\n          <div class="field-value">' + converter.makeHtml(field.value) + '</div>\n        </div>\n      ');
 
@@ -189,7 +189,7 @@ $(document).ready(function () {
     }
 
     if (embed.footer) {
-      embed.footer = parseLineBreaksAndSpaces(embed.footer);
+      embed.footer = escapeS(embed.footer);
       
       $('.card.embed').append('<div class="embed-footer"><span>' + embed.footer + '</span></div>');
 
@@ -321,9 +321,14 @@ $(document).ready(function () {
     updateEmbed(embed);
   }
 
-  function parseLineBreaksAndSpaces(str) {
-    if(str)
-      return str.replace('\\n', '<br>').replace('\\u200b', '&#x200b;');
+  function escapeS(str) {
+    if (str) {
+        try {
+            return str = JSON.parse('"' + str + '"');
+        } catch (SyntaxEror) {
+            return str;
+        }
+    }
   }
 
   $('#form').submit(function (e) {

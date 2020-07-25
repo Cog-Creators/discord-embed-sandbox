@@ -44,7 +44,7 @@ $(document).ready(() => {
       // update source
       source += `title="${embed.title}", url='${embed.url}'`;
     } else {
-      embed.title = parseLineBreaksAndSpaces(embed.title);
+      embed.title = escapeS(embed.title);
       
       $('.embed-inner').append(`<div class="embed-title">${embed.title}</div>`);
       
@@ -53,7 +53,7 @@ $(document).ready(() => {
     }
     
     if (embed.description) {
-      embed.description = parseLineBreaksAndSpaces(embed.description);
+      embed.description = escapeS(embed.description);
 
       $('.embed-inner').append(`<div class="embed-description">${embed.description}</div>`);
       
@@ -75,7 +75,7 @@ $(document).ready(() => {
       // add author to source
       source += `embed.set_author(`;
 
-      embed.author.name = parseLineBreaksAndSpaces(embed.author.name);
+      embed.author.name = escapeS(embed.author.name);
       
       $('.embed-title').before(`<div class="embed-author"><a class="embed-author-name" href="${embed.author.url}">${embed.author.name}</a></div>`);
       
@@ -111,8 +111,8 @@ $(document).ready(() => {
     }
     
     for (let field of embed.fields) {
-      field.name = parseLineBreaksAndSpaces(field.name);
-      field.value = parseLineBreaksAndSpaces(field.value);
+      field.name = escapeS(field.name);
+      field.value = escapeS(field.value);
 
       $('.embed-inner .fields').append(`
         <div class="field ${field.inline && 'inline'}">
@@ -126,7 +126,7 @@ $(document).ready(() => {
     }
 
     if (embed.footer) {
-      embed.footer = parseLineBreaksAndSpaces(embed.footer);
+      embed.footer = escapeS(embed.footer);
 
       $('.card.embed').append(`<div class="embed-footer"><span>${embed.footer}</span></div>`);
       
@@ -266,9 +266,14 @@ $(document).ready(() => {
     updateEmbed(embed);
   }
 
-  function parseLineBreaksAndSpaces(str) {
-    if(str)
-      return str.replace('\\n', '<br>').replace('\\u200b', '&#x200b;');
+  function escapeS(str) {
+    if (str) {
+        try {
+            return str = JSON.parse('"' + str + '"');
+        } catch (SyntaxEror) {
+            return str;
+        }
+    }
   }
   
   $('#form').submit((e) => {
