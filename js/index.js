@@ -55,7 +55,7 @@ $(document).ready(function () {
     } else {
       embed.title = escapeS(embed.title);
     
-      $('.embed-inner').append('<div class="embed-title">' + embed.title + '2</div>');
+      $('.embed-inner').append('<div class="embed-title">' + embed.title + '</div>');
 
       // update source
       if (switches.useVars) {
