@@ -191,7 +191,7 @@ $(document).ready(function () {
     }
 
     // add send function
-    source += 'await self.bot.say(embed=embed)\n';
+    source += 'await ctx.send(embed=embed)\n';
 
     // code
     $('.source').text(source);
