@@ -125,7 +125,7 @@ $(document).ready(function () {
         if (switches.useVars) {
           source += 'icon_url=' + embed.author.icon;
         } else {
-          source += ', icon_url="' + embed.author.icon + '"';
+          source += 'icon_url="' + embed.author.icon + '"';
         }
       }
 
