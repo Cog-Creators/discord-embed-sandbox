@@ -119,7 +119,7 @@ $(document).ready(function () {
       if (embed.author.icon) {
         $('.embed-author-name').before('<img class="embed-author-icon" src="' + embed.author.icon + '" />');
 
-        source += ',';
+        source += ', ';
 
         // update source
         if (switches.useVars) {
