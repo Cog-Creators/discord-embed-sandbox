@@ -97,7 +97,10 @@ $(document).ready(function () {
       // add author to source
       source += 'embed.set_author(';
 
-      $('.embed-title').before('<div class="embed-author"><a class="embed-author-name" href="' + embed.author.url + '">' + embed.author.name + '</a></div>');
+      const titleExists = document.getElementsByClassName('embed-title').length > 0;
+      const authorNameHTML = '<div class="embed-author"><a class="embed-author-name" href="' + embed.author.url + '">' + embed.author.name + '</a></div>';
+      if(titleExists) $('.embed-title').before(authorNameHTML);
+      else $('.embed-inner').append(authorNameHTML);
 
       // update source
       if (switches.useVars) {
