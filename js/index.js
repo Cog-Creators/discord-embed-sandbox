@@ -194,8 +194,10 @@ $(document).ready(function () {
     source += 'await ctx.send(embed=embed)\n';
 
     // code
-    $('.source').text(source);
-    hljs.highlightBlock($('.source')[0]);
+    $('.py-source').text(source);
+    hljs.highlightBlock($('.py-source')[0]);
+    $('.json-source').text(JSON.stringify(embed));
+    hljs.highlightBlock($('.json-source')[0]);
   }
 
   // run once on startup
