@@ -103,12 +103,17 @@ a.patreon-link {
 }
 .embed .embed-footer {
   font-size: 12px;
+  white-space: pre-wrap;
 }
 .embed .embed-footer span {
   color: rgba(255, 255, 255, 0.6);
 }
 .embed .embed-inner .embed-title {
   color: #fff;
+  white-space: pre-wrap;
+}
+.embed .embed-inner .embed-description {
+  white-space: pre-wrap;
 }
 .embed .embed-inner .embed-author {
   display: -webkit-box;
@@ -132,6 +137,7 @@ a.patreon-link {
   font-weight: 600;
   font-size: 14px;
   color: #fff !important;
+  white-space: pre-wrap;
 }
 .embed .embed-inner .fields {
   display: -webkit-box;
@@ -169,6 +175,7 @@ a.patreon-link {
   font-size: 14px;
   margin-bottom: 4px;
   font-weight: 600;
+  white-space: pre-wrap;
 }
 .embed .embed-inner .fields .field .field-value {
   color: rgba(255, 255, 255, 0.7);
