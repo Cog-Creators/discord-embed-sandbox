@@ -1,0 +1,17 @@
+{
+	"name": "discord-embed-sandbox",
+	"version": "1.0.0",
+	"description": "Web-based Sandbox for Discord Embeds with Code Generation",
+	"repository": "https://github.com/Cog-Creators/discord-embed-sandbox",
+	"author": "Cog Creators",
+	"license": "MIT",
+	"devDependencies": {
+		"@babel/cli": "^7.15.7",
+		"@babel/core": "^7.15.8",
+		"pug-cli": "^1.0.0-alpha6",
+		"sass": "^1.43.2"
+	},
+	"scripts": {
+		"build": "sass sass:css && babel babel/index.babel --out-file js/index.js"
+	}
+}
