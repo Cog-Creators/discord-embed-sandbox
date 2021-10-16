@@ -1,5 +1,21 @@
 'use strict';
 
+const sanitize = (table, prop) => {
+	if (!table || !table[prop]) return;
+	const uncheckedInput = table[prop];
+	const map = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#x27;',
+		'/': '&#x2F;',
+	};
+	const reg = /[&<>"'/]/gi;
+	table[prop] = uncheckedInput.replace(reg, match => map[match]);
+	return table[prop];
+};
+
 $(document).ready(function () {
   var converter = new showdown.Converter();
 
@@ -36,6 +52,25 @@ $(document).ready(function () {
   }
 
   function updateEmbed(embed) {
+		// Sanitize Input
+		sanitize(embed, 'title');
+		sanitize(embed.author, 'name');
+		sanitize(embed.author, 'url');
+		sanitize(embed.author, 'icon');
+		sanitize(embed, 'description');
+		sanitize(embed, 'url');
+		sanitize(embed, 'thumb_url');
+		sanitize(embed, 'color');
+		for (const i in embed.fields ?? []) {
+			if (Object.hasOwnProperty.call(embed.fields ?? [], i)) {
+				const field = (embed.fields ?? [])[i];
+				sanitize(field, 'name');
+				sanitize(field, 'value');
+			}
+		}
+    sanitize(embed, 'footer');
+    
+    // Reset the Embed
     resetEmbed();
 
     // add basic embed generation to source
