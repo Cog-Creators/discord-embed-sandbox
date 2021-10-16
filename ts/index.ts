@@ -1,11 +1,11 @@
 'use strict';
 
-import { Embed } from "./tsDeffinitions";
+import { Embed } from './tsDeffinitions';
 
 // @ts-ignore
 const hljs: any = hljs ?? {};
 // @ts-ignore
-const showdown: any = showdown ?? {}
+const showdown: any = showdown ?? {};
 
 const sanitize = (table, prop) => {
 	if (!table || !table[prop]) return '';
@@ -16,7 +16,7 @@ const sanitize = (table, prop) => {
 		// '>': '&gt;', // disabled to allow md using quotes
     '>': '>',
 		'"': '&quot;',
-		"'": '&#x27;',
+		'\'': '&#x27;',
 		'/': '&#x2F;',
 	};
 	const reg = /[&<>"'/]/gi;
@@ -221,15 +221,16 @@ $(function () {
 			$('.embed-inner').append('<div class="fields"></div>');
 		}
 
-		for (
+    for (
+			// eslint-disable-next-line no-var
 			var _iterator = embed.fields,
 				_isArray = Array.isArray(_iterator),
-        _i:any = 0,
-        // @ts-ignore
-				_iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();
-			;
-
+				_i: any = 0,
+				// @ts-ignore
+				// eslint-disable-next-line no-redeclare
+				_iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;
 		) {
+			// eslint-disable-next-line no-var
 			var _ref;
 
 			if (_isArray) {
@@ -241,7 +242,7 @@ $(function () {
 				_ref = _i.value;
 			}
 
-			var field = _ref;
+			let field = _ref;
 
 			$('.embed-inner .fields').append(
 				'\n        <div class="field ' +
@@ -303,7 +304,7 @@ $(function () {
 		// generate inputs for fields
 		$('.input-fields').html('');
 
-		var _loop = function _loop(i) {
+		let _loop = function _loop(i) {
 			$('.input-fields').append(
 				'<div class="form-group row">\n        <div class="col-sm-4">\n          <input class="form-control" id="field-' +
 					i +
@@ -339,7 +340,7 @@ $(function () {
 			});
 		};
 
-		for (var i = 0; i < fields; i++) {
+		for (let i = 0; i < fields; i++) {
 			_loop(i);
 		}
 		$('.input-fields').append(
@@ -456,16 +457,16 @@ $(function () {
 	}
 
 	$('#title').on('keyup', function () {
-		var item = $('#title');
-		var title = item.val();
+		let item = $('#title');
+		let title = item.val();
 
 		// update
 		updateTitle(title);
 	});
 
 	$('#url').on('keyup', function () {
-		var item = $('#url');
-		var url = item.val().toString();
+		let item = $('#url');
+		let url = item.val().toString();
 
 		if (url.substr(0, 4) !== 'http' && url.length !== 0 && !switches.useVars) {
 			addWarning(item, 'url', 'not a valid url');
@@ -477,8 +478,8 @@ $(function () {
 	});
 
 	$('#icon').on('keyup', function () {
-		var item = $('#icon');
-		var icon = item.val().toString();
+		let item = $('#icon');
+		let icon = item.val().toString();
 
 		if (
 			icon.substr(0, 4) !== 'http' &&
@@ -494,8 +495,8 @@ $(function () {
 	});
 
 	$('#description').on('keyup', function () {
-		var item = $('#description');
-		var description = item.val();
+		let item = $('#description');
+		let description = item.val();
 		addSuccess(item, 'description');
 		// update
 		updateDescription(description);
@@ -506,8 +507,8 @@ $(function () {
 	});
 
 	$('#author_name').on('keyup', function () {
-		var item = $('#author_name');
-		var author_name = item.val();
+		let item = $('#author_name');
+		let author_name = item.val();
 
 		addSuccess(item, 'author_name');
 		// update
@@ -515,8 +516,8 @@ $(function () {
 	});
 
 	$('#author_url').on('keyup', function () {
-		var item = $('#author_url');
-		var author_url = item.val().toString();
+		let item = $('#author_url');
+		let author_url = item.val().toString();
 
 		if (
 			author_url.substr(0, 4) !== 'http' &&
@@ -532,8 +533,8 @@ $(function () {
 	});
 
 	$('#author_icon').on('keyup', function () {
-		var item = $('#author_icon');
-		var author_icon: string = item.val().toString();
+		let item = $('#author_icon');
+		let author_icon: string = item.val().toString();
 
 		if (
 			author_icon.substr(0, 4) !== 'http' &&
@@ -549,8 +550,8 @@ $(function () {
 	});
 
 	$('#footer').on('keyup', function () {
-		var item = $('#footer');
-		var footer = item.val();
+		let item = $('#footer');
+		let footer = item.val();
 
 		addSuccess(item, 'footer');
 		// update

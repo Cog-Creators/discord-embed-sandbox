@@ -9,6 +9,7 @@
 	"devDependencies": {
 		"@types/jquery": "^3.5.7",
 		"@types/showdown": "^1.9.4",
+		"@typescript-eslint/parser": "^5.0.0",
 		"eslint": "^8.0.1",
 		"pug-cli": "^1.0.0-alpha6",
 		"sass": "^1.43.2",
