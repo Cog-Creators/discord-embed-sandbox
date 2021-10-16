@@ -1,3 +1,19 @@
+
+const sanitize = (table, prop) => {
+	if (!table || !table[prop]) return;
+	const uncheckedInput = table[prop];
+	const map = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#x27;',
+		'/': '&#x2F;',
+	};
+	const reg = /[&<>"'/]/gi;
+	table[prop] = uncheckedInput.replace(reg, match => map[match]);
+	return table[prop];
+};
 $(document).ready(() => {
   let switches = {
     title: false,
@@ -33,103 +49,139 @@ $(document).ready(() => {
   }
   
   function updateEmbed(embed) {
-    resetEmbed();
-    
-    // add basic embed generation to source
-    source = `embed=discord.Embed(`;
+		// Sanitize Input
+		sanitize(embed, 'title');
+		sanitize(embed.author, 'name');
+		sanitize(embed.author, 'url');
+		sanitize(embed.author, 'icon');
+		sanitize(embed, 'description');
+		sanitize(embed, 'url');
+		sanitize(embed, 'thumb_url');
+		sanitize(embed, 'color');
+		for (const i in embed.fields ?? []) {
+			if (Object.hasOwnProperty.call(embed.fields ?? [], i)) {
+				const field = (embed.fields ?? [])[i];
+				sanitize(field, 'name');
+				sanitize(field, 'value');
+			}
+		}
+		sanitize(embed, 'footer');
 
-    if (embed.url) {
-      $('.embed-inner').append(`<div class="embed-title"><a href="${embed.url}">${embed.title}</a></div>`);
-      
-      // update source
-      source += `title="${embed.title}", url='${embed.url}'`;
-    } else {
-      $('.embed-inner').append(`<div class="embed-title">${embed.title}</div>`);
-      
-      // update source
-      source += `title="${embed.title}"`;
-    }
-    
-    if (embed.description) {
-      $('.embed-inner').append(`<div class="embed-description">${embed.description}</div>`);
-      
-      // update source
-      source += `, description="${embed.description}"`;
-    }
-    
-    if (embed.color) {
-      $('.side-colored').css('background-color', embed.color); 
-      
-      // update source
-      source += `, color=0x${embed.color.substr(1)}`;
-    }
-    
-    // finished the basic setup
-    source += `)\n`;
-    
-    if (embed.author.name) {
-      // add author to source
-      source += `embed.set_author(`;
-      
-      $('.embed-title').before(`<div class="embed-author"><a class="embed-author-name" href="${embed.author.url}">${embed.author.name}</a></div>`);
-      
-        // update source
-        source += `name="${embed.author.name}"${embed.author.url && `, url='${embed.author.url}'`}`;
-      if (embed.author.icon) {
-        $('.embed-author-name').before(`<img class="embed-author-icon" src="${embed.author.icon}" />`);
-        
-        // update source
-        source += `, icon_url='${embed.author.icon}'`;
-      }
-      
-      // finish author
-      source += `)\n`;
-    }
+		// Reset the Embed
+		resetEmbed();
+		resetEmbed();
 
-    if (embed.thumb_url) {
-      // add thumbnail
-      source += `embed.set_thumbnail(`
-      
-      $('.card.embed .card-block').append(`<img class="embed-thumb" src="${embed.thumb_url}" />`);
-      $('.embed-thumb').height($('.embed-thumb')[0].naturalHeight);
-      
-      // update source
-      source += `url='${embed.thumb_url}'`;
-      
-      // finish thumbnail
-      source += `)\n`;
-    }
+		// add basic embed generation to source
+		source = `embed=discord.Embed(`;
 
-    if (embed.fields.length > 0) {
-      $('.embed-inner').append(`<div class="fields"></div>`);
-    }
-    
-    for (let field of embed.fields) {
-      $('.embed-inner .fields').append(`
+		if (embed.url) {
+			$('.embed-inner').append(
+				`<div class="embed-title"><a href="${embed.url}">${embed.title}</a></div>`
+			);
+
+			// update source
+			source += `title="${embed.title}", url='${embed.url}'`;
+		} else {
+			$('.embed-inner').append(`<div class="embed-title">${embed.title}</div>`);
+
+			// update source
+			source += `title="${embed.title}"`;
+		}
+
+		if (embed.description) {
+			$('.embed-inner').append(
+				`<div class="embed-description">${embed.description}</div>`
+			);
+
+			// update source
+			source += `, description="${embed.description}"`;
+		}
+
+		if (embed.color) {
+			$('.side-colored').css('background-color', embed.color);
+
+			// update source
+			source += `, color=0x${embed.color.substr(1)}`;
+		}
+
+		// finished the basic setup
+		source += `)\n`;
+
+		if (embed.author.name) {
+			// add author to source
+			source += `embed.set_author(`;
+
+			$('.embed-title').before(
+				`<div class="embed-author"><a class="embed-author-name" href="${embed.author.url}">${embed.author.name}</a></div>`
+			);
+
+			// update source
+			source += `name="${embed.author.name}"${
+				embed.author.url && `, url='${embed.author.url}'`
+			}`;
+			if (embed.author.icon) {
+				$('.embed-author-name').before(
+					`<img class="embed-author-icon" src="${embed.author.icon}" />`
+				);
+
+				// update source
+				source += `, icon_url='${embed.author.icon}'`;
+			}
+
+			// finish author
+			source += `)\n`;
+		}
+
+		if (embed.thumb_url) {
+			// add thumbnail
+			source += `embed.set_thumbnail(`;
+
+			$('.card.embed .card-block').append(
+				`<img class="embed-thumb" src="${embed.thumb_url}" />`
+			);
+			$('.embed-thumb').height($('.embed-thumb')[0].naturalHeight);
+
+			// update source
+			source += `url='${embed.thumb_url}'`;
+
+			// finish thumbnail
+			source += `)\n`;
+		}
+
+		if (embed.fields.length > 0) {
+			$('.embed-inner').append(`<div class="fields"></div>`);
+		}
+
+		for (let field of embed.fields) {
+			$('.embed-inner .fields').append(`
         <div class="field ${field.inline && 'inline'}">
           <div class="field-name">${field.name}</div>
           <div class="field-value">${field.value}</div>
         </div>
       `);
-      
-      // add field
-      source += `embed.add_field(name="${field.name}", value="${field.value}", inline=${(field.inline && 'True') || 'False'})\n`;
-    }
 
-    if (embed.footer) {
-      $('.card.embed').append(`<div class="embed-footer"><span>${embed.footer}</span></div>`);
-      
-      // add footer
-      source += `embed.set_footer(text="${embed.footer}")\n`;
-    }
-    
-    // add send function
-    source += `await self.bot.say(embed=embed)\n`;
-    
-    // code
-    $('.source').text(source);
-    hljs.highlightBlock($('.source')[0]);
-  }
+			// add field
+			source += `embed.add_field(name="${field.name}", value="${
+				field.value
+			}", inline=${(field.inline && 'True') || 'False'})\n`;
+		}
+
+		if (embed.footer) {
+			$('.card.embed').append(
+				`<div class="embed-footer"><span>${embed.footer}</span></div>`
+			);
+
+			// add footer
+			source += `embed.set_footer(text="${embed.footer}")\n`;
+		}
+
+		// add send function
+		source += `await self.bot.say(embed=embed)\n`;
+
+		// code
+		$('.source').text(source);
+		hljs.highlightBlock($('.source')[0]);
+	}
   
   // run once on startup
   updateEmbed(embed);
