@@ -8,14 +8,15 @@ const hljs: any = hljs ?? {};
 const showdown: any = showdown ?? {}
 
 const sanitize = (table, prop) => {
-	if (!table || !table[prop]) return;
+	if (!table || !table[prop]) return '';
 	const uncheckedInput = table[prop];
 	const map = {
 		'&': '&amp;',
 		'<': '&lt;',
-		'>': '&gt;',
+		// '>': '&gt;', // disabled to allow md using quotes
+    '>': '>',
 		'"': '&quot;',
-		'\'': '&#x27;',
+		"'": '&#x27;',
 		'/': '&#x2F;',
 	};
 	const reg = /[&<>"'/]/gi;
@@ -37,7 +38,7 @@ $(function () {
 
 	let source = '';
 
-	let embed:Embed = {
+	let embed: Embed = {
 		title: '',
 		author: {
 			name: '',
@@ -48,7 +49,7 @@ $(function () {
 		url: '',
 		thumb_url: '',
 		color: '',
-		fields: [{}],
+		fields: [{ name: '', value: '', inline:true }],
 		footer: '',
 	};
 
@@ -58,7 +59,8 @@ $(function () {
 		$('.embed-thumb').remove();
 	}
 
-	function updateEmbed(embed) {
+  function updateEmbed(embed) {
+    embed = JSON.parse(JSON.stringify(embed)); // clone embed
 		// Sanitize Input
 		sanitize(embed, 'title');
 		sanitize(embed.author, 'name');
@@ -77,7 +79,10 @@ $(function () {
 		}
 		sanitize(embed, 'footer');
 
-		// Reset the Embed    // add basic embed generation to source
+		// Reset the Embed
+    resetEmbed();
+    
+    // add basic embed generation to source
 		source = 'embed=discord.Embed(';
 
 		if (embed.url) {
@@ -316,19 +321,19 @@ $(function () {
 					i +
 					'-delete" class="btn btn-danger">Delete</button>\n        </div>\n      </div>'
 			);
-			$('#field-' + i + '-name').keyup(function () {
+			$('#field-' + i + '-name').on('keyup',function () {
 				updateFieldName(i, $('#field-' + i + '-name').val());
 			});
 
-			$('#field-' + i + '-value').keyup(function () {
+			$('#field-' + i + '-value').on('keyup',function () {
 				updateFieldValue(i, $('#field-' + i + '-value').val());
 			});
 
-			$('#field-' + i + '-inline').click(function () {
+			$('#field-' + i + '-inline').on('click',function () {
 				updateFieldInline(i, $('#field-' + i + '-inline').is(':checked'));
 			});
 
-			$('#field-' + i + '-delete').click(function (e) {
+			$('#field-' + i + '-delete').on('click',function (e) {
 				e.preventDefault();
 				deleteField(i);
 			});
@@ -340,7 +345,7 @@ $(function () {
 		$('.input-fields').append(
 			'<button id="add-field" class="btn btn-success">Add field</button>'
 		);
-		$('#add-field').click(function (e) {
+		$('#add-field').on('click',function (e) {
 			e.preventDefault();
 			addField();
 		});
@@ -371,7 +376,7 @@ $(function () {
 	}
 
 	function addField() {
-    embed.fields.push({ inline: true });
+    embed.fields.push({ name:'',value:'', inline: true });
 		fields += 1;
 		generateInputFields(fields);
 	}
@@ -450,7 +455,7 @@ $(function () {
 		$('#' + type + '-feedback').remove();
 	}
 
-	$('#title').keyup(function () {
+	$('#title').on('keyup', function () {
 		var item = $('#title');
 		var title = item.val();
 
@@ -458,7 +463,7 @@ $(function () {
 		updateTitle(title);
 	});
 
-	$('#url').keyup(function () {
+	$('#url').on('keyup', function () {
 		var item = $('#url');
 		var url = item.val().toString();
 
@@ -471,7 +476,7 @@ $(function () {
 		}
 	});
 
-	$('#icon').keyup(function () {
+	$('#icon').on('keyup', function () {
 		var item = $('#icon');
 		var icon = item.val().toString();
 
@@ -488,7 +493,7 @@ $(function () {
 		}
 	});
 
-	$('#description').keyup(function () {
+	$('#description').on('keyup', function () {
 		var item = $('#description');
 		var description = item.val();
 		addSuccess(item, 'description');
@@ -496,11 +501,11 @@ $(function () {
 		updateDescription(description);
 	});
 
-	$('#color').change(function () {
+	$('#color').on('change', function () {
 		updateColor($('#color').val());
 	});
 
-	$('#author_name').keyup(function () {
+	$('#author_name').on('keyup', function () {
 		var item = $('#author_name');
 		var author_name = item.val();
 
@@ -509,7 +514,7 @@ $(function () {
 		updateAuthorName(author_name);
 	});
 
-	$('#author_url').keyup(function () {
+	$('#author_url').on('keyup', function () {
 		var item = $('#author_url');
 		var author_url = item.val().toString();
 
@@ -526,9 +531,9 @@ $(function () {
 		}
 	});
 
-	$('#author_icon').keyup(function () {
+	$('#author_icon').on('keyup', function () {
 		var item = $('#author_icon');
-		var author_icon:string = item.val().toString();
+		var author_icon: string = item.val().toString();
 
 		if (
 			author_icon.substr(0, 4) !== 'http' &&
@@ -543,7 +548,7 @@ $(function () {
 		}
 	});
 
-	$('#footer').on("keyup",function () {
+	$('#footer').on('keyup', function () {
 		var item = $('#footer');
 		var footer = item.val();
 
@@ -552,7 +557,7 @@ $(function () {
 		updateFooter(footer);
 	});
 
-	$('#useVars').click(function () {
+	$('#useVars').on('click',function () {
 		switches.useVars = !switches.useVars;
 		updateEmbed(embed);
 	});

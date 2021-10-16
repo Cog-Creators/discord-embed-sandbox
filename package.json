@@ -7,17 +7,16 @@
 	"license": "MIT",
 	"dependencies": {},
 	"devDependencies": {
-		"@babel/cli": "^7.15.7",
-		"@babel/core": "^7.15.8",
 		"@types/jquery": "^3.5.7",
 		"@types/showdown": "^1.9.4",
 		"eslint": "^8.0.1",
 		"pug-cli": "^1.0.0-alpha6",
-		"sass": "^1.43.2"
+		"sass": "^1.43.2",
+		"typescript": "^4.4.4"
 	},
 	"scripts": {
-		"build": "sass sass:css && babel babel/index.babel --out-file js/index.js",
-		"eslint": "eslint ./babel/index.babel",
-		"eslint:fix": "eslint ./babel/index.babel --fix"
+		"build": "sass sass:css && tsc",
+		"eslint": "eslint ./ts/index.ts",
+		"eslint:fix": "eslint ./ts/index.ts --fix"
 	}
 }
