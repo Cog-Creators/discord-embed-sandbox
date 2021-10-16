@@ -13,6 +13,8 @@
 		"sass": "^1.43.2"
 	},
 	"scripts": {
-		"build": "sass sass:css && babel babel/index.babel --out-file js/index.js"
+		"build": "sass sass:css && babel babel/index.babel --out-file js/index.js",
+		"eslint": "eslint ./babel/index.babel",
+		"eslint:fix": "eslint ./babel/index.babel --fix"
 	}
 }
