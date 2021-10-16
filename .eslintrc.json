@@ -1,0 +1,18 @@
+{ 
+  "parser": "@typescript-eslint/parser",
+  "rules": {
+    "semi": ["error", "always"],
+    "quotes": ["error", "single"],
+    "no-var": ["error"],
+    "no-undef": 0
+  },
+  "extends": ["eslint:recommended"],
+  
+  "parserOptions": {
+    "ecmaVersion": 2021
+  },
+
+  "env": {
+    "es6": true
+  }
+}
