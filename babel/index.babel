@@ -48,7 +48,10 @@ $(document).ready(() => {
     $('.embed-thumb').remove();
   }
   
-  function updateEmbed(embed) {
+  function updateEmbed(unsanitizedEmbed) {
+		// clone embed
+    let embed = JSON.parse(JSON.stringify(unsanitizedEmbed));
+
 		// Sanitize Input
 		sanitize(embed, 'title');
 		sanitize(embed.author, 'name');
@@ -65,8 +68,8 @@ $(document).ready(() => {
 				sanitize(field, 'value');
 			}
 		}
-		sanitize(embed, 'footer');
-
+    sanitize(embed, 'footer');
+    
 		// Reset the Embed
 		resetEmbed();
 		resetEmbed();
